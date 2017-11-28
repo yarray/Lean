@@ -95,6 +95,8 @@ namespace QuantConnect.Algorithm.CSharp
     /// </summary>
     public class Bitcoin : BaseData
     {
+        private static string _authCode = "";
+
         [JsonProperty("timestamp")]
         public int Timestamp = 0;
         [JsonProperty("open")]
@@ -114,6 +116,15 @@ namespace QuantConnect.Algorithm.CSharp
         [JsonProperty("volume")]
         public decimal VolumeBTC = 0;
         public decimal VolumeUSD = 0;
+
+        /// <summary>
+        /// Flag indicating whether or not the Quanl auth code has been set yet
+        /// </summary>
+        public static bool IsAuthCodeSet
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 1. DEFAULT CONSTRUCTOR: Custom data types need a default constructor.
@@ -142,7 +153,7 @@ namespace QuantConnect.Algorithm.CSharp
 
             //return "http://my-ftp-server.com/futures-data-" + date.ToString("Ymd") + ".zip";
             // OR simply return a fixed small data file. Large files will slow down your backtest
-            return new SubscriptionDataSource("http://www.quandl.com/api/v1/datasets/BCHARTS/BITSTAMPUSD.csv?sort_order=asc", SubscriptionTransportMedium.RemoteFile);
+            return new SubscriptionDataSource("http://www.quandl.com/api/v1/datasets/BCHARTS/BITSTAMPUSD.csv?sort_order=asc&api_key=" + _authCode, SubscriptionTransportMedium.RemoteFile);
         }
 
         /// <summary>
@@ -191,6 +202,18 @@ namespace QuantConnect.Algorithm.CSharp
             catch { /* Do nothing, skip first title row */ }
 
             return coin;
+        }
+
+        /// <summary>
+        /// Set the auth code for the quandl set to the QuantConnect auth code.
+        /// </summary>
+        /// <param name="authCode"></param>
+        public static void SetAuthCode(string authCode)
+        {
+            if (string.IsNullOrWhiteSpace(authCode)) return;
+
+            _authCode = authCode;
+            IsAuthCodeSet = true;
         }
     }
 }
