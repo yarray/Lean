@@ -59,7 +59,9 @@ namespace QuantConnect.Lean.Engine.DataFeeds
         /// <param name="universeData">The data provided to perform selection with</param>
         public SecurityChanges ApplyUniverseSelection(Universe universe, DateTime dateTimeUtc, BaseDataCollection universeData)
         {
-            var algorithmEndDateUtc = _algorithm.EndDate.ConvertToUtc(_algorithm.TimeZone);
+            // QCAlgorithm forces the end date to be exactly 1 tick shy of midnight
+            // so we're rounding it forward so it's exactly at midnight
+            var algorithmEndDateUtc = _algorithm.EndDate.RoundUp(Time.OneSecond).ConvertToUtc(_algorithm.TimeZone);
             if (dateTimeUtc > algorithmEndDateUtc)
             {
                 return SecurityChanges.None;

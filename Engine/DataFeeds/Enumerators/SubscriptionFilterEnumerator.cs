@@ -119,7 +119,7 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Enumerators
                     }
 
                     // make sure we haven't passed the end
-                    if (current.Time > _endTime)
+                    if (current.EndTime > _endTime)
                     {
                         return false;
                     }
