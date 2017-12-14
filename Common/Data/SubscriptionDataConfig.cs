@@ -262,13 +262,6 @@ namespace QuantConnect.Data
             dataNormalizationMode ?? config.DataNormalizationMode
             )
         {
-            PriceScaleFactor = config.PriceScaleFactor;
-            SumOfDividends = config.SumOfDividends;
-
-            foreach (var consolidator in config.Consolidators)
-            {
-                Consolidators.Add(consolidator);
-            }
         }
 
         /// <summary>

@@ -238,6 +238,11 @@ namespace QuantConnect.Lean.Engine.DataFeeds
             // safe to remove the member from the universe
             universe.RemoveMember(dateTimeUtc, member);
 
+
+            // HACK -- We need a more centralized means of managing things like subscriptions,
+            //         securities, consolidators and price caches. Until a more holistic design
+            //         emerges, we'll handle this here.
+
             // we need to mark this security as untradeable while it has no data subscription
             // it is expected that this function is called while in sync with the algo thread,
             // so we can make direct edits to the security here
@@ -251,6 +256,12 @@ namespace QuantConnect.Lean.Engine.DataFeeds
                 else
                 {
                     _dataFeed.RemoveSubscription(subscription.Configuration);
+
+                    // HACK -- need to reset this data so it gets re-initialized properly
+                    // eventually the management of scaling factors should be moved to its
+                    // own component (likewise for consolidators)
+                    subscription.Configuration.PriceScaleFactor = 0;
+                    subscription.Configuration.SumOfDividends = 0;
                 }
             }
 
