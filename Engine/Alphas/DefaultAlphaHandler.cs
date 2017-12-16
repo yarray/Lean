@@ -185,7 +185,6 @@ namespace QuantConnect.Lean.Engine.Alphas
             }
 
             // reset for next sampling period
-            _alphaCountPerSymbol.Clear();
             _lastChartSampleAlgorithmTimeUtc = _nextChartSampleAlgorithmTimeUtc;
             _nextChartSampleAlgorithmTimeUtc = Algorithm.UtcTime + ChartUpdateInterval;
         }
