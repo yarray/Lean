@@ -173,7 +173,7 @@ namespace QuantConnect.Lean.Engine.Alphas
             {
                 // populate charts with the daily alpha counts per symbol, resetting our storage
                 var sumPredictions = PopulateChartWithSeriesPerSymbol(_dailyAlphaCountPerSymbol, _dailyAlphaCountPerSymbolChart, SeriesType.StackedArea);
-                _dailyAlphaCountPerSymbol.Clear();
+                //_dailyAlphaCountPerSymbol.Clear();
 
                 // add sum of daily alpha counts to the total alpha count series
                 _totalAlphaCountSeries.AddPoint(Algorithm.UtcTime, sumPredictions, LiveMode);
