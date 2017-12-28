@@ -150,6 +150,8 @@ namespace QuantConnect.Lean.Engine.DataFeeds
             // ensure we read equity data before option data, so we can set the current underlying price
             foreach (var packet in data.OrderBy(x => x.Configuration.Symbol.SecurityType))
             {
+                if (!packet.InUniverse) continue;
+
                 var list = packet.Data;
                 var symbol = packet.Security.Symbol;
 

@@ -1,11 +1,11 @@
 /*
  * QUANTCONNECT.COM - Democratizing Finance, Empowering Individuals.
  * Lean Algorithmic Trading Engine v2.0. Copyright 2014 QuantConnect Corporation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,23 +25,23 @@ namespace QuantConnect.Lean.Engine.DataFeeds
     /// </summary>
     public class DataFeedPacket
     {
+        private readonly Subscription _subscription;
         private readonly List<BaseData> _data;
 
         /// <summary>
         /// The security
         /// </summary>
-        public Security Security
-        {
-            get; private set;
-        }
+        public Security Security => _subscription.Security;
 
         /// <summary>
         /// The subscription configuration that produced this data
         /// </summary>
-        public SubscriptionDataConfig Configuration
-        {
-            get; private set;
-        }
+        public SubscriptionDataConfig Configuration => _subscription.Configuration;
+
+        /// <summary>
+        /// Gets flag indicating if the security is in the universe that created the source subscription
+        /// </summary>
+        public bool InUniverse => _subscription.Universe.ContainsMember(_subscription.Security.Symbol);
 
         /// <summary>
         /// Gets the number of data points held within this packet
@@ -62,26 +62,22 @@ namespace QuantConnect.Lean.Engine.DataFeeds
         /// <summary>
         /// Initializes a new instance of the <see cref="DataFeedPacket"/> class
         /// </summary>
-        /// <param name="security">The security whose data is held in this packet</param>
-        /// <param name="configuration">The subscription configuration that produced this data</param>
-        public DataFeedPacket(Security security, SubscriptionDataConfig configuration)
+        /// <param name="subscription">The source of this data feed packet</param>
+        public DataFeedPacket(Subscription subscription)
         {
-            Security = security;
-            Configuration = configuration;
+            _subscription = subscription;
             _data = new List<BaseData>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataFeedPacket"/> class
         /// </summary>
-        /// <param name="security">The security whose data is held in this packet</param>
-        /// <param name="configuration">The subscription configuration that produced this data</param>
+        /// <param name="subscription">The source of this data feed packet</param>
         /// <param name="data">The data to add to this packet. The list reference is reused
         /// internally and NOT copied.</param>
-        public DataFeedPacket(Security security, SubscriptionDataConfig configuration, List<BaseData> data)
+        public DataFeedPacket(Subscription subscription, List<BaseData> data)
         {
-            Security = security;
-            Configuration = configuration;
+            _subscription = subscription;
             _data = data;
         }
 
