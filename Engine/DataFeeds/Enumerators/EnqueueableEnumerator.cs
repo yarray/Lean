@@ -1,11 +1,11 @@
 /*
  * QUANTCONNECT.COM - Democratizing Finance, Empowering Individuals.
  * Lean Algorithmic Trading Engine v2.0. Copyright 2014 QuantConnect Corporation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,6 +36,7 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Enumerators
         private volatile bool _disposed;
 
         private readonly int _timeout;
+        private readonly Timer _timer;
         private readonly object _lock = new object();
         private readonly BlockingCollection<T> _blockingCollection;
 
@@ -78,6 +79,16 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Enumerators
         {
             _blockingCollection = new BlockingCollection<T>();
             _timeout = blocking ? Timeout.Infinite : 0;
+            _timer = new Timer(_ =>
+            {
+                if (_end)
+                {
+                    _timer.Dispose();
+                    return;
+                }
+                Logging.Log.Trace("EnqueueableEnumerator.Count: " + _blockingCollection.Count);
+            });
+            _timer.Change(Time.OneSecond, Time.OneSecond);
         }
 
         /// <summary>
