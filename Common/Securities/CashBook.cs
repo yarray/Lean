@@ -22,6 +22,7 @@ using System.Text;
 using QuantConnect.Data;
 using System.Collections.Concurrent;
 using QuantConnect.Logging;
+using QuantConnect.Configuration;
 
 namespace QuantConnect.Securities
 {
@@ -33,7 +34,7 @@ namespace QuantConnect.Securities
         /// <summary>
         /// Gets the base currency used
         /// </summary>
-        public const string AccountCurrency = "USD";
+        public static string AccountCurrency = "USD";
 
         private readonly ConcurrentDictionary<string, Cash> _currencies;
 
@@ -51,7 +52,17 @@ namespace QuantConnect.Securities
         public CashBook()
         {
             _currencies = new ConcurrentDictionary<string, Cash>();
+            SetAccountCurrency();
             _currencies.AddOrUpdate(AccountCurrency, new Cash(AccountCurrency, 0, 1.0m));
+        }
+
+        private void SetAccountCurrency()
+        {
+            string currency = Config.Get("account-currency");
+            if (currency != null && currency.Trim() != "")
+            {
+                AccountCurrency = currency;
+            }
         }
 
         /// <summary>

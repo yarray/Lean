@@ -38,7 +38,13 @@ namespace QuantConnect
             "BTCEUR",
             "BCHEUR",
             "LTCEUR",
-            "ETHEUR"
+            "ETHEUR",
+            "ETHBTC",
+            "DAHUSD",
+            "EOSUSD",
+            "NEOUSD",
+            "TRXUSD",
+            "ZECUSD"
         };
 
         /// <summary>
